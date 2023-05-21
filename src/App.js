@@ -4,12 +4,12 @@ import Search from './components/SerachBar';
 import Data from './components/Data';
 import { useEffect, useState } from 'react';
 import ErrorBox from './components/ErrorBox';
-import Popup from './components/Popup';
 function App() {
   const check = !navigator.onLine;
   const [city, setCity] = useState("");
   const [data, setData] = useState();
   const [fail, setFail] = useState(check);
+  const [get, setGet] = useState(0);
   window.addEventListener('offline',()=>{
     setFail(true);
     setData("");
@@ -19,12 +19,16 @@ function App() {
     setFail(false);
     window.location.reload();
   })
+
   useEffect(() => {
     if(navigator.onLine){navigator.geolocation.getCurrentPosition((pos) => {
       let val = pos.coords.latitude + "%2C" + pos.coords.longitude;
       setCity(val);
+    },()=>{
+      get === 0 && window.alert("Allow permission to the location for getting your weather data")
+      setGet(val => val+1);
     })}
-  }, [])
+  }, [get])
   useEffect(() => {
     if (city) {
       const options = {
